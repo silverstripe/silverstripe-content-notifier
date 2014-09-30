@@ -24,7 +24,7 @@ As defined in the ```ContentNotfifer``` interface, you must add the following me
 ```php
 <?php
 
-class Comment extends DataObject
+class Comment extends DataObject implements ContentNotifier
 {
 	
 	private static $db = array (
