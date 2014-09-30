@@ -1,0 +1,19 @@
+{
+	"name":"silverstripe/content-notifier",
+	"type": "silverstripe-module",
+	"description": "Notifies admins of new user-generated content",
+	"keywords": ["silverstripe"],
+	"license": "BSD-3-Clause",
+	"homepage": "https://github.com/silverstripe/silverstripe-content-notifier/",
+	"require": {
+        "unclecheese/betterbuttons": "1.2.*"
+	},	
+	"authors":[
+		{
+			"name": "Uncle Cheese",
+			"homepage": "http://leftandmain.com",
+			"email" : "unclecheese@leftandmain.com"
+		}
+
+	]
+}
