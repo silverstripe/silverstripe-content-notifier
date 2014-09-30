@@ -1,0 +1,8 @@
+Emailer:
+  class: Email
+ContentNotifierExtension:
+  admin_permission: ADMIN
+ContentNotifierEmail:
+  template: ContentNotifierEmail
+  item_template: ContentNotifierEmailItem
+  items_limit: 10
