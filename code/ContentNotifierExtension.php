@@ -108,42 +108,50 @@ class ContentNotifierExtension extends DataExtension
 			$this->owner->isCreating = true;
 
 			// New records can approve themselves
-            if($this->shouldAutoApprove('CREATED')) {			
-                $this->owner->ContentNotifierApproved = true;
-            }
+			if($this->shouldAutoApprove('CREATED')) {
+				$this->owner->ContentNotifierApproved = true;
+			}
 			return;
 		}
 
 		// If editing a record, allow auto unapproval
-        if(!$this->owner->isChanged('ContentNotifierApproved')) {
+		if(!$this->owner->isChanged('ContentNotifierApproved')) {
 			// Adjust approvel only if not changed explicitly
-            $this->owner->ContentNotifierApproved = $this->shouldAutoApprove('UPDATED');
+			$this->owner->ContentNotifierApproved = $this->shouldAutoApprove('UPDATED');
 		}
 	}
 
 
-    public function onAfterWrite() {
-        if($this->checkPermission()) return;
-        
-        if($this->owner->isCreating) {
-            $this->createQueue('CREATED');        
-        }
+	public function onAfterWrite() {
+		// Trigger events after approval state changes.
+		if($this->owner->isChanged('ContentNotifierApproved', 2)) {
+			if ($this->owner->ContentNotifierApproved) {
+				$this->owner->invokeWithExtensions('onAfterContentNotifierApprove');
+			} else {
+				$this->owner->invokeWithExtensions('onAfterContentNotifierUnapprove');
+			}
+		}
 
-        // Otherwise, this is an update
-        else if($this->owner->isChanged()) {
-            // Clear any existing entry
-            if($queue = $this->getQueue('UPDATED')) {
-                $queue->delete();
-            }
-            $this->createQueue('UPDATED');
-        }
+		// Note: this has an effect that privileged user's showcase submissions will not show up in the queue.
+		if($this->checkPermission()) return;
 
-        if(!$this->getSetting('batch_email')) {
-            $email = ContentNotifierEmail::create();
-            $email->setRecords(ContentNotifierQueue::get_unnotified());
-            $email->send();
-        }
-    }
+		if($this->owner->isCreating) {
+			$this->createQueue('CREATED');
+		} else if($this->owner->isChanged()) {
+			// Clear any existing entry
+			if($queue = $this->getQueue('UPDATED')) {
+				$queue->delete();
+			}
+			$this->createQueue('UPDATED');
+		}
+
+		if(!$this->getSetting('batch_email')) {
+			$email = ContentNotifierEmail::create();
+			$email->setRecords(ContentNotifierQueue::get_unnotified());
+			$email->send();
+		}
+
+	}
 
 
     public function onAfterDelete() {
