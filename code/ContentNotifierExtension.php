@@ -101,7 +101,9 @@ class ContentNotifierExtension extends DataExtension
 
 	public function onBeforeWrite() {
 		// Prevent CMS actions or updates being overridden
-		if($this->checkPermission()) return;
+		if($this->checkPermission()) {
+			$this->owner->ContentNotifierApproved = true;
+		}
 
 		// If creating a dataobject for the first time, auto-approve if allowed
 		if(!$this->owner->isInDB()) {
@@ -111,6 +113,7 @@ class ContentNotifierExtension extends DataExtension
 			if($this->shouldAutoApprove('CREATED')) {
 				$this->owner->ContentNotifierApproved = true;
 			}
+			
 			return;
 		}
 
@@ -190,9 +193,8 @@ class ContentNotifierExtension extends DataExtension
     }
 
 
-	protected function checkPermission() {
-		// CLI scripts can edit records freely
-		if(Director::is_cli()) return true;
+	protected function checkPermission() {		
+		if(Director::is_cli()) return false;
 
 		$perm = Config::inst()->get(__CLASS__, 'admin_permission');
 		$cms = is_subclass_of(Controller::curr()->class, "LeftAndMain");
