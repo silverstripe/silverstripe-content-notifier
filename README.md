@@ -9,7 +9,7 @@ The Content Notifier module is used to allow moderation of user-generated conten
 
 ## Usage
 
-* Install the repository to your SilverStripe project in the web root., e.g. ```/content-nofitifer/```. 
+* Install the repository to your SilverStripe project in the web root., e.g. ```/content-notifier/```. 
 * ```/dev/build?flush```
 * Add the extension ```ContentNotifierExtension``` to any DataObjects you want to use the notifier. The DataObject class receiving the extension **must implement the ContentNotifier interface**.
 
