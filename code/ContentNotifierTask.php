@@ -1,10 +1,14 @@
 <?php
 
 
-class ContentNotifierTask extends CliController
+class ContentNotifierTask extends BuildTask
 {
 
-    public function index() {
+    protected $title = 'New and updated content notification task';
+
+    protected $description = 'Collates and sends items to notify users about';
+
+    public function run($request) {
         $queue = ContentNotifierQueue::get_unnotified();
         if($queue->exists()) {
             $count = $queue->count();
