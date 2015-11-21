@@ -3,15 +3,15 @@
 
 class ContentNotifierEmail extends Object
 {
-
     protected $emailer;
 
 
     protected $records;
 
 
-    public function __construct() {        
-        $this->emailer = Email::create();        
+    public function __construct()
+    {
+        $this->emailer = Email::create();
         $config = $this->config();
 
         $this->emailer->setFrom($config->from);
@@ -21,15 +21,17 @@ class ContentNotifierEmail extends Object
     }
 
 
-    public function setRecords(DataList $list) {
+    public function setRecords(DataList $list)
+    {
         $this->records = $list;
 
         return $this;
     }
 
 
-    public function send() {
-        if(!$this->records) {
+    public function send()
+    {
+        if (!$this->records) {
             $this->setRecords(ContentNotifierQueue::get_unnotified());
         }
 
@@ -43,7 +45,7 @@ class ContentNotifierEmail extends Object
         $this->emailer->populateTemplate(array(
             'Headline' => $this->config()->headline,
             'GroupedItems' => $grouped,
-            'Total' => $total,            
+            'Total' => $total,
             'Link' => Controller::join_links(
                 Director::absoluteBaseURL(),
                 'admin',
@@ -53,13 +55,11 @@ class ContentNotifierEmail extends Object
 
         $this->emailer->send();
 
-        foreach($this->records as $record) {
+        foreach ($this->records as $record) {
             $record->HasNotified = true;
             $record->write();
         }
 
         ContentNotifierExtension::enable_filtering(true);
     }
-
-
 }

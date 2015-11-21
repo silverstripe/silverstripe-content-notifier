@@ -3,9 +3,8 @@
 
 class ContentNotifierAdmin extends ModelAdmin
 {
-
-    private static $managed_models = array (
-        'ContentNotifierQueue' => array (
+    private static $managed_models = array(
+        'ContentNotifierQueue' => array(
             'title' => 'Notifications'
         )
     );
@@ -15,6 +14,4 @@ class ContentNotifierAdmin extends ModelAdmin
 
 
     private static $url_segment = 'content-notifications';
-
-
 }

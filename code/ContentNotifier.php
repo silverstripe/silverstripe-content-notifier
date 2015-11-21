@@ -3,7 +3,6 @@
 
 interface ContentNotifier
 {
-
     public function getContentNotifierExcerpt();
 
     public function getContentNotifierLink();
