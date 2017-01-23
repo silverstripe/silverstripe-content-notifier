@@ -1,0 +1,8 @@
+mappings:
+  ContentNotifier: SilverStripe\ContentNotifier\ContentNotifier
+  ContentNotifierAdmin: SilverStripe\ContentNotifier\Admin\ContentNotifierAdmin
+  ContentNotifierExtension: SilverStripe\ContentNotifier\Extensions\ContentNotifierExtension
+  ContentNotifierEmail: SilverStripe\ContentNotifier\Model\ContentNotifierEmail
+  ContentNotifierQueue: SilverStripe\ContentNotifier\Model\ContentNotifierQueue
+  ContentNotifierCleanTask: SilverStripe\ContentNotifier\Tasks\ContentNotifierCleanTask
+  ContentNotifierTask: SilverStripe\ContentNotifier\Tasks\ContentNotifierTask

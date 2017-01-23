@@ -9,50 +9,53 @@ The Content Notifier module is used to allow moderation of user-generated conten
 
 ## Usage
 
-* Install the repository to your SilverStripe project in the web root., e.g. ```/content-notifier/```. 
-* ```/dev/build?flush```
-* Add the extension ```ContentNotifierExtension``` to any DataObjects you want to use the notifier. The DataObject class receiving the extension **must implement the ContentNotifier interface**.
+* Install with composer: `composer require silverstripe/content-notifier`
+* Build and flush: `/dev/build?flush=1`
+* Add the extension `ContentNotifierExtension` to any DataObjects you want to use the notifier. The DataObject class receiving the extension **must implement the `SilverStripe\ContentNotifier\ContentNotifier` interface**.
 
 ### Requirements
-As defined in the ```ContentNotfifer``` interface, you must add the following methods to your DataObject:
+As defined in the `ContentNotfifer` interface, you must add the following methods to your DataObject:
 
-* ```getContentNotifierExcerpt()```: The summary of content that will be displayed in the notification email.
-* ```getContentNotifierLink()```: The link to edit this record in the CMS.
-* ```getContentNotifierHeadline()```: The title of the DataObject that will appear in the notification email
+* `getContentNotifierExcerpt()`: The summary of content that will be displayed in the notification email.
+* `getContentNotifierLink()`: The link to edit this record in the CMS.
+* `getContentNotifierHeadline()`: The title of the DataObject that will appear in the notification email
 
 #### Example
 ```php
 <?php
 
+use SilverStripe\ContentNotifier\ContentNotifier;
+use SilverStripe\ORM\DataObject;
+
 class Comment extends DataObject implements ContentNotifier
 {
-	
-	private static $db = array (
+	private static $db = array(
 		'Comment' => 'Text',
 		'Author' => 'Varchar'
 	);
 
-
-    public function getContentNotifierExcerpt() {
+    public function getContentNotifierExcerpt()
+    {
     	return $this->obj('Comment')->LimitWordCount(50);
     }
 
-    public function getContentNotifierLink() {
+    public function getContentNotifierLink()
+    {
     	return "/admin/comments/edit/{$this->ID}";
     }
 
-    public function getContentNotifierHeadLine() {
+    public function getContentNotifierHeadLine()
+    {
 		return "/admin/comments/Comment/EditForm/field/Comment/item/{$this->ID}/edit";    
     }
-
 }
 ```
 
 ### Configuration
-In your ```_config/``` directory, first define some global settings:
+In your `_config/` directory, first define some global settings:
 
-```
-ContentNotifierEmail:
+```yaml
+SilverStripe\ContentNotifier\Model\ContentNotifierEmail:
   to: "me@example.com"
   from: notifications@example.com
   subject: Content has been updated on your site
@@ -61,7 +64,7 @@ ContentNotifierEmail:
 
 Then, you can specify behaviours for each individual implementor of the Content Notifier extension.
 
-```
+```yaml
 Comment:
   ContentNotifier:
     batch_email: true
@@ -74,11 +77,11 @@ JobListing:
     auto_approve: '*'
 ```
 
-The following settigs are available:
+The following settings are available:
 
-* **batch_email** Don't notify of changes immediately. Use the ```ContentNotifierTask``` to deliver a batch email of updates. (Requires setting up a cron job)
-* **delete_on_resolve** Once content is approved or denied, delete the ```ContentNotifierQueue``` record. (Recommended for tidiness)
-* **auto_approve** Depending on the event, the content can auto-approve. The moderator of the content will still receive an email detailing the update, but the content is optimistically approved in advance rather than waiting for manual approval. Possible values: "*" (always approve), "UPDATED" (auto-approve updates), "CREATED" (auto-approve creates).
+* **batch_email:** Don't notify of changes immediately. Use the `ContentNotifierTask` to deliver a batch email of updates. (Requires setting up a cron job)
+* **delete_on_resolve:** Once content is approved or denied, delete the `ContentNotifierQueue` record. (Recommended for tidiness)
+* **auto_approve:** Depending on the event, the content can auto-approve. The moderator of the content will still receive an email detailing the update, but the content is optimistically approved in advance rather than waiting for manual approval. Possible values: `*` (always approve), `UPDATED` (auto-approve updates), `CREATED` (auto-approve creates).
 
 ### ContentNotifierQueue
 
@@ -86,20 +89,21 @@ This is a polymorphic object that just displays readonly fields of the record th
 
 ### ContentNotifierTask
 
-Run ```/dev/tasks/ContentNotifierTask``` to send out the batch email of all the content that needs approval.
+Run `/dev/tasks/ContentNotifierTask` to send out the batch email of all the content that needs approval.
 
 ### ContentNotifierCleanTask
 
-Run ```/dev/tasks/ContentNotifierCleanTask``` to bulk-delete any ContentNotifierQueue records that are no longer needed. You must include an ```action``` parameter in the request that contains one of the following values:
-* "all" (delete all queue records)
-* "approved" (delete all queue records that have been approved)
-* "denied" (delete all queue records that have been denied)
-* "orphaned" (delete all queue records that no longer point to an existing record)
+Run `/dev/tasks/ContentNotifierCleanTask` to bulk-delete any ContentNotifierQueue records that are no longer needed. You must include an ```action``` parameter in the request that contains one of the following values:
+
+* `all` (delete all queue records)
+* `approved` (delete all queue records that have been approved)
+* `denied` (delete all queue records that have been denied)
+* `orphaned` (delete all queue records that no longer point to an existing record)
 
 
 ## Turning off the filter
 
-By default, anything that uses the ContentNotifierExtension will be hidden from a result set unless the user is an admin (see the ```admin_permission``` setting to customise). Occasionally, you may want to allow the record to be seen, for instance, when a user is editing his unapproved content. In that case, you can invoke ```ContentNotifierExtension::disable_filtering();````.
+By default, anything that uses the ContentNotifierExtension will be hidden from a result set unless the user is an admin (see the `admin_permission` setting to customise). Occasionally, you may want to allow the record to be seen, for instance, when a user is editing his unapproved content. In that case, you can invoke `ContentNotifierExtension::disable_filtering()`.
 
 
 ## How is this different from the Advanced Workflow module?
