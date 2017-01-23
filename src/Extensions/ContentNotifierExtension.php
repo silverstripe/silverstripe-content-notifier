@@ -12,6 +12,7 @@ use SilverStripe\ContentNotifier\Model\ContentNotifierQueue;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Security\Permission;
 
