@@ -3,11 +3,12 @@
 namespace SilverStripe\ContentNotifier\Admin;
 
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\ContentNotifier\Model\ContentNotifierQueue;
 
 class ContentNotifierAdmin extends ModelAdmin
 {
     private static $managed_models = array(
-        'ContentNotifierQueue' => array(
+        ContentNotifierQueue::class => array(
             'title' => 'Notifications'
         )
     );

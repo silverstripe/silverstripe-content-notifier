@@ -2,9 +2,6 @@
 
 namespace SilverStripe\ContentNotifier\Model;
 
-use BetterButtonCustomAction;
-use BetterButtonLink;
-
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
@@ -13,6 +10,8 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use UncleCheese\BetterButtons\Actions\BetterButtonCustomAction;
+use UncleCheese\BetterButtons\Actions\BetterButtonLink;
 
 class ContentNotifierQueue extends DataObject
 {
@@ -76,7 +75,8 @@ class ContentNotifierQueue extends DataObject
 
     public function getRecord()
     {
-        return DataList::create($this->RecordClass)->byID($this->RecordID);
+        $class = Injector::inst()->get($this->RecordClass);
+        return DataList::create($class->class)->byID($this->RecordID);
     }
 
     public function getTitle()
