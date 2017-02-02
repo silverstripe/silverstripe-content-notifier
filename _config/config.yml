@@ -1,8 +1,14 @@
-Emailer:
-  class: Email
-ContentNotifierExtension:
+---
+Name: contentnotifierconfig
+---
+SilverStripe\Core\Injector\Injector:
+  Emailer:
+    class: SilverStripe\Control\Email\Email
+
+SilverStripe\ContentNotifier\Extensions\ContentNotifierExtension:
   admin_permission: ADMIN
-ContentNotifierEmail:
+
+SilverStripe\ContentNotifier\Model\ContentNotifierEmail:
   template: ContentNotifierEmail
   item_template: ContentNotifierEmailItem
   items_limit: 10
