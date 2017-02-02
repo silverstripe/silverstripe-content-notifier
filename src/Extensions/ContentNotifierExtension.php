@@ -3,10 +3,10 @@
 namespace SilverStripe\ContentNotifier\Extensions;
 
 use RuntimeException;
-use BetterButtonCustomAction;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ContentNotifier\ContentNotifier;
 use SilverStripe\ContentNotifier\Model\ContentNotifierEmail;
 use SilverStripe\ContentNotifier\Model\ContentNotifierQueue;
 use SilverStripe\Control\Director;
@@ -15,6 +15,7 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Security\Permission;
+use UncleCheese\BetterButtons\Actions\BetterButtonCustomAction;
 
 class ContentNotifierExtension extends DataExtension
 {
@@ -31,7 +32,7 @@ class ContentNotifierExtension extends DataExtension
 
     public static function get_extra_config($class, $extension, $args)
     {
-        if (!ClassInfo::classImplements($class, "SilverStripe\\ContentNotifier\\ContentNotifier")) {
+        if (!ClassInfo::classImplements($class, ContentNotifier::class)) {
             throw new RuntimeException("$class must implement ContentNotifier to be used by the ContentNotifierExtension");
         }
     }
