@@ -97,13 +97,11 @@ class ContentNotifierQueue extends DataObject
             $fields->push(
                 BetterButtonCustomAction::create('deny', 'Deny')
                     ->setRedirectType(BetterButtonCustomAction::REFRESH)
-                    ->setSuccessMessage('Denied for publication')
             );
         } else {
             $fields->push(
                 BetterButtonCustomAction::create('approve', 'Approve')
                     ->setRedirectType(BetterButtonCustomAction::REFRESH)
-                    ->setSuccessMessage('Approved for publication')
             );
         }
 
@@ -128,6 +126,8 @@ class ContentNotifierQueue extends DataObject
     {
         if ($this->getRecord()) {
             $this->getRecord()->approve();
+
+            return 'Approved for publication';
         }
     }
 
@@ -135,6 +135,8 @@ class ContentNotifierQueue extends DataObject
     {
         if ($this->getRecord()) {
             $this->getRecord()->deny();
+
+            return 'Denied for publication';
         }
     }
 
