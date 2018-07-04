@@ -43,12 +43,12 @@ class ContentNotifierQueue extends DataObject
 
         $fields = $this->getRecord()->getCMSFields();
         $fields->unshift(new LiteralField("stat", "<h3 style='margin-left:10px;'>Status: " . $this->getRecord()->getStatus()."</h3>"));
-        
+
         // Create a dummy form so we can get access to loadDataFrom(). :-(
         return Form::create(Controller::curr(), "dummy", $fields, FieldList::create())
             ->loadDataFrom($this->getRecord())
             ->Fields()
-            ->makeReadonly();        
+            ->makeReadonly();
     }
 
     public function Category() {
@@ -56,7 +56,7 @@ class ContentNotifierQueue extends DataObject
     }
 
 
-    public function getRecord() {        
+    public function getRecord() {
         return DataList::create($this->RecordClass)->byID($this->RecordID);
     }
 
@@ -66,7 +66,7 @@ class ContentNotifierQueue extends DataObject
             return "[{$this->RecordClass}] " . $this->getRecord()->getTitle();
         }
     }
-    
+
 
     public function getBetterButtonsActions() {
         $fields = parent::getBetterButtonsActions();
@@ -76,7 +76,6 @@ class ContentNotifierQueue extends DataObject
             $fields->push(
                 BetterButtonCustomAction::create('deny', 'Deny')
                     ->setRedirectType(BetterButtonCustomAction::REFRESH)
-                    ->setSuccessMessage('Denied for publication')
             );
 
         }
@@ -84,9 +83,8 @@ class ContentNotifierQueue extends DataObject
             $fields->push(
                 BetterButtonCustomAction::create('approve', 'Approve')
                     ->setRedirectType(BetterButtonCustomAction::REFRESH)
-                    ->setSuccessMessage('Approved for publication')
             );
-            
+
         }
 
         $fields->push(
@@ -108,12 +106,16 @@ class ContentNotifierQueue extends DataObject
     public function approve() {
         if($this->getRecord()) {
             $this->getRecord()->approve();
+
+            return 'Approved for publication';
         }
     }
 
     public function deny() {
         if($this->getRecord()) {
             $this->getRecord()->deny();
+
+            return 'Denied for publication';
         }
     }
 
