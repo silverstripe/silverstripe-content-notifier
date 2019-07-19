@@ -17,6 +17,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Security\Permission;
 use UncleCheese\BetterButtons\Actions\BetterButtonCustomAction;
 
+
 class ContentNotifierExtension extends DataExtension
 {
     private static $db = array(
@@ -85,7 +86,7 @@ class ContentNotifierExtension extends DataExtension
      */
     protected function getSetting($setting)
     {
-        $config = Config::inst()->get($this->owner->class, 'ContentNotifier');
+        $config = Config::inst()->get(get_class($this->owner), ContentNotifier::class);
 
         return isset($config[$setting]) ? $config[$setting] : false;
     }
@@ -187,7 +188,7 @@ class ContentNotifierExtension extends DataExtension
     public function onAfterDelete()
     {
         ContentNotifierQueue::get()->filter(array(
-            'RecordClass' => $this->owner->class,
+            'RecordClass' => get_class($this->owner),
             'RecordID' => $this->owner->ID ?: 0
         ))->removeAll();
     }
@@ -202,7 +203,7 @@ class ContentNotifierExtension extends DataExtension
     protected function createQueue($event)
     {
         return ContentNotifierQueue::create(array(
-            'RecordClass' => $this->owner->class,
+            'RecordClass' => get_class($this->owner),
             'Event' => $event,
             'RecordID' => $this->owner->ID
         ))->write();
@@ -211,7 +212,7 @@ class ContentNotifierExtension extends DataExtension
     public function getQueue($event = null)
     {
         $list = ContentNotifierQueue::get()->filter(array(
-            'RecordClass' => $this->owner->class,
+            'RecordClass' => get_class($this->owner),
             'RecordID' => $this->owner->ID ?: 0
         ));
 
@@ -228,7 +229,7 @@ class ContentNotifierExtension extends DataExtension
         }
 
         $perm = Config::inst()->get(__CLASS__, 'admin_permission');
-        $cms = is_subclass_of(Controller::curr()->class, LeftAndMain::class);
+        $cms = is_subclass_of(get_class(Controller::curr()), LeftAndMain::class);
 
         return Permission::check($perm) || $cms;
     }

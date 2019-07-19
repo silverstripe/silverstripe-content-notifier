@@ -76,7 +76,7 @@ class ContentNotifierQueue extends DataObject
     public function getRecord()
     {
         $class = Injector::inst()->get($this->RecordClass);
-        return DataList::create($class->class)->byID($this->RecordID);
+        return DataList::create(get_class($class))->byID($this->RecordID);
     }
 
     public function getTitle()
