@@ -6,8 +6,7 @@
     "license": "BSD-3-Clause",
     "homepage": "https://github.com/silverstripe/silverstripe-content-notifier/",
     "require": {
-        "silverstripe/framework": "^4.0@dev",
-        "unclecheese/betterbuttons": "2.x-dev"
+        "silverstripe/framework": "^4.0@dev"
     },
     "autoload": {
         "psr-4": {
